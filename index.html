@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наш класс 10 А</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f7a62' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 10v6M2 10l10-5 10 5-10 5z'/%3E%3Cpath d='M6 12v5c3 3 9 3 12 0v-5'/%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background: #f0f2f5; 
+            color: #333333; 
+            line-height: 1.6; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== ФОНОВЫЕ ЭЛЕМЕНТЫ ПО БОКАМ (МАТЕМАТИКА) ===== */
+        body::before, body::after {
+            content: '∑ ∫ π ∞ √ Δ f(x) ± ≠ ≈';
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 90px;
+            font-weight: 800;
+            font-family: 'Times New Roman', serif;
+            color: #8f7a62;
+            opacity: 0.08;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            letter-spacing: 50px;
+            z-index: -1;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 0 2px rgba(143, 122, 98, 0.2);
+        }
+
+        body::before { left: 1%; }
+        body::after { right: 1%; }
+
+        @media (max-width: 1200px) {
+            body::before, body::after { display: none; }
+        }
+        
+        /* ===== ШАПКА ===== */
+        header { 
+            background: #e5dacb; 
+            padding: 20px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 15px rgba(143, 122, 98, 0.15); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            position: relative; 
+        }
+
+        .logo { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: #5e4b38; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== НАВИГАЦИЯ (ПК) ===== */
+        nav.desktop-nav { display: flex; gap: 25px; }
+
+        nav.desktop-nav a { 
+            text-decoration: none; 
+            color: #7a6b5d; 
+            font-weight: 500; 
+            transition: 0.3s; 
+            cursor: pointer; 
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            font-size: 15px;
+        }
+
+        nav.desktop-nav a:hover, nav.desktop-nav a.active { 
+            color: #3b2f23; 
+            border-bottom: 2px solid #8f7a62;
+        }
+
+        /* ===== КРУГЛАЯ КНОПКА БУРГЕР ===== */
+        .burger { 
+            display: none; 
+            width: 48px; height: 48px;
+            background: #f0f2f5; 
+            border: 1px solid #d8ccbe; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            gap: 5px; 
+            z-index: 200; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 10px rgba(143, 122, 98, 0.1);
+        }
+
+        .burger:hover { background: #e5dacb; transform: scale(1.05); }
+
+        .burger span { 
+            display: block; width: 20px; height: 2px; 
+            background: #5e4b38; border-radius: 3px; transition: all 0.3s ease; 
+        }
+
+        .burger.active { background: #e5dacb; }
+        .burger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .burger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .burger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ===== МОБИЛЬНОЕ МЕНЮ ===== */
+        .mobile-menu {
+            display: none; 
+            position: absolute;
+            top: 100%; right: 20px; width: 250px;
+            background: #fdfbf7; 
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e5dacb;
+            padding: 10px 0;
+            opacity: 0; transform: translateY(-10px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 150;
+        }
+
+        .mobile-menu.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+        .mobile-menu a {
+            display: block; padding: 15px 25px;
+            color: #5e4b38; text-decoration: none;
+            font-weight: 500; font-size: 16px;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+            opacity: 0; transform: translateX(-10px);
+            animation: slideInLink 0.4s ease forwards;
+        }
+
+        .mobile-menu.open a:nth-child(1) { animation-delay: 0.1s; }
+        .mobile-menu.open a:nth-child(2) { animation-delay: 0.15s; }
+        .mobile-menu.open a:nth-child(3) { animation-delay: 0.2s; }
+        .mobile-menu.open a:nth-child(4) { animation-delay: 0.25s; }
+        .mobile-menu.open a:nth-child(5) { animation-delay: 0.3s; }
+
+        @keyframes slideInLink { to { opacity: 1; transform: translateX(0); } }
+
+        .mobile-menu a:hover, .mobile-menu a.active {
+            background: #f0f2f5;
+            border-left: 4px solid #8f7a62;
+            color: #3b2f23;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ И ПЕРЕХОДЫ ===== */
+        main { flex: 1; padding: 50px 40px; max-width: 1000px; margin: 0 auto; width: 100%; position: relative; z-index: 1; }
+
+        .page { display: none; }
+
+        .page.active { 
+            display: block; 
+            animation: smoothAppear 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .page.fade-out { 
+            animation: smoothDisappear 0.3s ease forwards; 
+        }
+
+        @keyframes smoothAppear {
+            0% { opacity: 0; transform: translateY(40px) scale(0.96); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        @keyframes smoothDisappear {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        h1 { font-size: 34px; margin-bottom: 20px; color: #3b2f23; font-weight: 700; }
+        p { margin-bottom: 15px; color: #4a4a4a; font-size: 16px; }
+
+        /* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ КАРТОЧЕК ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== КАРТОЧКИ ===== */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+
+        .card { 
+            background: #fdfbf7; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04); 
+            border: 1px solid #e5dacb;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+        }
+
+        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(143, 122, 98, 0.12); }
+
+        .card h3 { margin-bottom: 10px; color: #5e4b38; font-size: 19px; }
+
+        /* ===== СПИСОК УЧЕНИКОВ ===== */
+        .student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 10px; }
+
+        .student-card {
+            background: linear-gradient(145deg, #ffffff, #fdfbf7);
+            border: 1px solid #e5dacb; 
+            border-left: 4px solid #a68a64; 
+            border-radius: 12px;
+            padding: 15px 20px; 
+            box-shadow: 0 8px 20px -5px rgba(143, 122, 98, 0.15), 0 4px 6px -2px rgba(143, 122, 98, 0.05); 
+            display: flex; 
+            align-items: flex-start;
+        }
+
+        .student-avatar {
+            width: 36px; height: 36px; border-radius: 10px; 
+            background: #f4f0ea; 
+            color: #8f7a62; 
+            border: 1px solid #e5dacb;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 16px; margin-right: 15px; flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            margin-top: 2px; 
+        }
+
+        .student-name { 
+            color: #3b2f23; 
+            font-weight: 600; 
+            font-size: 15px; 
+            word-break: break-word; 
+            line-height: 1.3; 
+        }
+
+        /* ===== ФОТОГАЛЕРЕЯ (4 ФОТО) ===== */
+        
+        .gallery-wall {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 25px;
+            margin-top: 40px;
+            padding: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .gallery-item {
+            background: #f0ead6; 
+            padding: 3px; 
+            border-radius: 10px;
+            border: 2px solid #c5a880; 
+            box-shadow: 
+                0 8px 25px rgba(143, 122, 98, 0.15),
+                0 0 0 1px rgba(197, 168, 128, 0.3),
+                inset 0 0 10px rgba(197, 168, 128, 0.1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: #d4af37; 
+            box-shadow: 
+                0 15px 35px rgba(143, 122, 98, 0.25),
+                0 0 15px rgba(212, 175, 55, 0.4);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            display: block;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* --- Размеры и сдвиги для 4 фото --- */
+        
+        .gallery-item:nth-child(1) img { width: 450px; height: 300px; }
+        
+        .gallery-item:nth-child(2) { margin-top: 40px; }
+        .gallery-item:nth-child(2) img { width: 260px; height: 260px; }
+        
+        .gallery-item:nth-child(3) { margin-top: -20px; }
+        .gallery-item:nth-child(3) img { width: 240px; height: 380px; }
+        
+        .gallery-item:nth-child(4) img { width: 500px; height: 250px; }
+
+        @media (max-width: 768px) {
+            .gallery-wall { flex-direction: column; align-items: center; gap: 30px; padding: 10px; }
+            .gallery-item:nth-child(n) { margin-top: 0 !important; }
+            .gallery-item:nth-child(n) img { width: 100% !important; max-width: 350px !important; height: auto !important; }
+        }
+
+        /* ===== ФОРМА ===== */
+        .form-box {
+            background: #fdfbf7; padding: 40px; border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.04); border: 1px solid #e5dacb; max-width: 500px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #5e4b38; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 14px 16px; background: #f0f2f5; 
+            border: 1px solid #e5dacb; border-radius: 8px; color: #333333; 
+            font-size: 15px; font-family: 'Inter', sans-serif; outline: none; transition: 0.3s; 
+        }
+
+        .form-group input:focus, .form-group textarea:focus { 
+            border-color: #8f7a62; box-shadow: 0 0 0 3px rgba(143, 122, 98, 0.15); 
+        }
+
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
+        .btn { 
+            width: 100%; padding: 15px; background: #8f7a62; 
+            border: none; border-radius: 8px; color: #ffffff; 
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; 
+        }
+
+        .btn:hover { background: #6b5b47; box-shadow: 0 4px 15px rgba(143, 122, 98, 0.3); }
+
+        /* ===== ПОДВАЛ ===== */
+        footer { 
+            text-align: center; padding: 25px; background: #e5dacb; 
+            color: #6b5b47; font-size: 14px; margin-top: 50px; font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== КНОПКА НАВЕРХ ===== */
+        .scroll-top {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: #8f7a62; border: none; color: #ffffff;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 15px rgba(143, 122, 98, 0.3); z-index: 99;
+        }
+
+        .scroll-top svg { width: 24px; height: 24px; }
+        .scroll-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .scroll-top:hover { background: #6b5b47; transform: translateY(-4px) scale(1.05); box-shadow: 0 6px 20px rgba(143, 122, 98, 0.4); }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; }
+            nav.desktop-nav { display: none; }
+            .burger { display: flex; }
+            .mobile-menu { display: block; }
+            main { padding: 30px 20px; }
+            h1 { font-size: 26px; }
+            .form-box { padding: 25px; }
+            .student-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .scroll-top { bottom: 20px; right: 20px; width: 45px; height: 45px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Наш класс <span style="font-weight: 400; color: #8f7a62; font-size: 18px; margin-left: 5px;">10 А</span>
+        </div>
+        
+        <button class="burger" onclick="toggleMenu()" aria-label="Меню">
+            <span></span><span></span><span></span>
+        </button>
+
+        <nav class="desktop-nav">
+            <a onclick="showPage('home')" class="active" id="nav-home">Главная</a>
+            <a onclick="showPage('students')" id="nav-students">Учащиеся</a>
+            <a onclick="showPage('gallery')" id="nav-gallery">Фотогалерея</a>
+            <a onclick="showPage('info')" id="nav-info">Информация</a>
+            <a onclick="showPage('contact')" id="nav-contact">Обратная связь</a>
+        </nav>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <a onclick="showPage('home'); closeMenu();" class="active" id="m-nav-home">Главная</a>
+            <a onclick="showPage('students'); closeMenu();" id="m-nav-students">Учащиеся</a>
+            <a onclick="showPage('gallery'); closeMenu();" id="m-nav-gallery">Фотогалерея</a>
+            <a onclick="showPage('info'); closeMenu();" id="m-nav-info">Информация</a>
+            <a onclick="showPage('contact'); closeMenu();" id="m-nav-contact">Обратная связь</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ГЛАВНАЯ -->
+        <div class="page active" id="page-home">
+            <h1>Добро пожаловать в школьный уголок 10 "А" !</h1>
+            <p>Здесь мы будем делиться новостями, достижениями и важной информацией. Мы — дружный коллектив, который не боится сложных задач!</p>
+            
+            <div class="grid">
+                <div class="card reveal" style="border-top: 4px solid #8f7a62;">
+                    <h3>Наш профиль</h3>
+                    <p>Мы учимся в классе с углубленным изучением <strong>математики, информатики и физики</strong>. Мы любим решать сложные задачи и разбираться в технологиях.</p>
+                </div>
+                
+                <div class="card reveal" style="border-top: 4px solid #8f7a62; background: linear-gradient(135deg, #fdfbf7, #f4f0ea);">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <div style="background: #e5dacb; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0; font-size: 18px;">Староста класса</h3>
+                    </div>
+                    <p style="font-size: 22px; font-weight: 700; margin-bottom: 10px; background: linear-gradient(90deg, #5e4b38, #a68a64); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Чурин Дмитрий</p>
+                    <p>Наш лидер и главный помощник классного руководителя. По всем организационным вопросам обращайтесь к нему!</p>
+                </div>
+                
+                <div class="card reveal" style="border-top: 4px solid #8f7a62; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3>Наш классный чат</h3>
+                        <p>Все объявления, обсуждения и помощь с домашкой — здесь. Заходи, чтобы быть в курсе!</p>
+                    </div>
+                    <a href="https://max.ru/join/umaUt60alWUqL0n9RlYRKamv975LlwpGnmLpBuBwDGs" target="_blank" class="btn" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 15px; background: #e5dacb; color: #5e4b38; box-shadow: none; font-weight: 600;">Перейти в чат</a>
+                </div>
+            </div>
+
+            <!-- РАЗДЕЛИТЕЛЬ И ФОТОГРАФИЯ -->
+            <div class="reveal" style="margin-top: 60px; text-align: center;">
+                
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 40px;">
+                    <div style="flex: 1; height: 1px; background: #d8ccbe; max-width: 150px;"></div>
+                    <div style="width: 10px; height: 10px; background: #a68a64; transform: rotate(45deg); margin: 0 15px; border-radius: 2px;"></div>
+                    <div style="flex: 1; height: 1px; background: #d8ccbe; max-width: 150px;"></div>
+                </div>
+
+                <div style="display: inline-block; padding: 12px; background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(143, 122, 98, 0.15); border: 2px solid #e5dacb; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.transform='translateY(-5px) scale(1.02)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
+                    
+                    <img src="images/class_photo.jpg" alt="Наш класс" style="max-width: 100%; width: 700px; height: auto; border-radius: 12px; display: block;">
+                    
+                    <p style="margin-top: 15px; margin-bottom: 5px; font-size: 15px; color: #7a6b5d; font-weight: 500; letter-spacing: 0.3px;">
+                        Наш первый день в новом учебном году
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- СПИСОК УЧАЩИХСЯ -->
+        <div class="page" id="page-students">
+            <h1>Знакомьтесь, это мы!</h1>
+            
+            <div class="student-stats reveal" style="display: inline-flex; align-items: center; gap: 15px; background: #e5dacb; padding: 12px 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(143, 122, 98, 0.1);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <div>
+                    <span style="font-size: 22px; font-weight: 700; color: #3b2f23; line-height: 1;">34</span>
+                    <span style="font-size: 15px; color: #5e4b38; font-weight: 500; margin-left: 5px;">ученика</span>
+                </div>
+            </div>
+
+            <div class="student-grid" id="studentGrid">
+                <!-- Карточки будут добавлены скриптом -->
+            </div>
+
+            <!-- Финальная плашка -->
+            <div class="reveal" style="margin-top: 50px; padding: 40px 30px; background: linear-gradient(135deg, #fdfbf7, #f4f0ea); border-radius: 20px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(143, 122, 98, 0.15);">
+                
+                <div style="position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px; border: 2px solid #e5dacb; border-radius: 14px; pointer-events: none;"></div>
+                <div style="position: absolute; top: 15px; left: 15px; right: 15px; bottom: 15px; border: 1px solid #d8ccbe; border-radius: 10px; pointer-events: none;"></div>
+
+                <div style="width: 60px; height: 60px; background: #e5dacb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.2); position: relative; z-index: 2;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+
+                <h3 style="color: #3b2f23; font-size: 24px; margin-bottom: 12px; font-weight: 700; position: relative; z-index: 2;">Мы — одна команда</h3>
+                <p style="color: #5e4b38; font-size: 16px; max-width: 600px; margin: 0 auto; font-weight: 500; line-height: 1.7; position: relative; z-index: 2;">
+                    Впереди у нас еще много контрольных, экзаменов и веселых моментов. Поддержим друг друга на этом пути!
+                </p>
+            </div>
+        </div>
+
+        <!-- ФОТОГАЛЕРЕЯ -->
+        <div class="page" id="page-gallery">
+            <h1 style="text-align: center;">Фотогалерея</h1>
+            <p style="text-align: center; font-weight: 600;">Жизнь 10 "А" класса в моментах 📸</p>
+
+            <div class="gallery-wall">
+                <div class="gallery-item reveal">
+                    <img src="images/photo1.jpg" alt="Фото 1">
+                </div>
+                <div class="gallery-item reveal">
+                    <img src="images/photo2.jpg" alt="Фото 2">
+                </div>
+                <div class="gallery-item reveal">
+                    <img src="images/photo3.jpg" alt="Фото 3">
+                </div>
+                <div class="gallery-item reveal">
+                    <img src="images/photo4.jpg" alt="Фото 4">
+                </div>
+            </div>
+        </div>
+
+        <!-- ИНФОРМАЦИЯ -->
+        <div class="page" id="page-info">
+            <h1>Полезная информация</h1>
+            
+            <div class="grid">
+                <div class="card reveal" style="border-top: 4px solid #8f7a62; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                            <div style="background: #e5dacb; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.15);">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 21h18"></path>
+                                    <path d="M5 21V7l8-4 8 4v14"></path>
+                                    <path d="M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"></path>
+                                </svg>
+                            </div>
+                            <h3 style="margin: 0; font-size: 18px;">Наша школа №30</h3>
+                        </div>
+                        <p>Официальная группа школы. Здесь публикуются важные новости, объявления и фотографии школьной жизни.</p>
+                    </div>
+                    <a href="https://max.ru/id7204006081_gos" target="_blank" class="btn" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 15px; background: #e5dacb; color: #5e4b38; box-shadow: none; font-weight: 600;">Перейти в группу</a>
+                </div>
+
+                <!-- Карточка: Классный руководитель -->
+                <div class="card reveal" style="border-top: 4px solid #8f7a62; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; text-align: left;">
+                    
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px; justify-content: flex-start;">
+                        <div style="background: #e5dacb; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.15);">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0; font-size: 18px; text-align: left;">Наш классный руководитель</h3>
+                    </div>
+
+                    <div style="text-align: left; width: 100%; padding: 0;">
+                        <p style="font-size: 14px; color: #7a6b5d; margin-bottom: 12px; text-align: left;">Наш наставник и главный помощник.</p>
+                        
+                        <p style="margin: 0; line-height: 1.5; font-size: 18px; color: #3b2f23; font-weight: 700; text-align: left; padding-left: 0;">
+                            Сидоров<br>
+                            Александр<br>
+                            Юрьевич
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card reveal" style="border-top: 4px solid #8f7a62; grid-column: 1 / -1;"> 
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <div style="background: #e5dacb; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <h3 style="margin: 0; font-size: 20px;">Расписание звонков</h3>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
+                        <div style="background: #f4f0ea; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">1</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">08:00 – 08:40</div>
+                            </div>
+                        </div>
+                        <div style="background: #ffffff; border: 1px solid #e5dacb; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #f4f0ea; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62;">2</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">08:55 – 09:35</div>
+                            </div>
+                        </div>
+                        <div style="background: #f4f0ea; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">3</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">09:50 – 10:30</div>
+                            </div>
+                        </div>
+                        <div style="background: #ffffff; border: 1px solid #e5dacb; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #f4f0ea; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62;">4</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">10:45 – 11:25</div>
+                            </div>
+                        </div>
+                        <div style="background: #f4f0ea; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">5</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">11:45 – 12:25</div>
+                            </div>
+                        </div>
+                        <div style="background: #ffffff; border: 1px solid #e5dacb; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #f4f0ea; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62;">6</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">12:30 – 13:10</div>
+                            </div>
+                        </div>
+                        <div style="background: #f4f0ea; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">7</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">13:15 – 13:55</div>
+                            </div>
+                        </div>
+                        <div style="background: #ffffff; border: 1px solid #e5dacb; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 15px; transition: 0.3s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <div style="background: #f4f0ea; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #8f7a62;">8</div>
+                            <div>
+                                <div style="font-size: 13px; color: #7a6b5d; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Урок</div>
+                                <div style="font-size: 17px; color: #3b2f23; font-weight: 700;">14:10 – 14:50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ОБРАТНАЯ СВЯЗЬ -->
+        <div class="page" id="page-contact">
+            <h1>Обратная связь</h1>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: start; margin-top: 30px;">
+                
+                <div class="form-box reveal" style="max-width: 100%; margin: 0;">
+                    <form onsubmit="event.preventDefault(); alert('Сообщение отправлено!');">
+                        <div class="form-group">
+                            <label>Ваше имя</label>
+                            <input type="text" placeholder="Введите имя" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="example@mail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Сообщение</label>
+                            <textarea placeholder="Ваше сообщение..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Отправить сообщение</button>
+                    </form>
+                </div>
+
+                <div class="reveal" style="background: linear-gradient(135deg, #fdfbf7, #f4f0ea); padding: 40px 30px; border-radius: 20px; border: 1px solid #e5dacb; box-shadow: 0 10px 30px rgba(143, 122, 98, 0.1); position: relative; overflow: hidden;">
+                    
+                    <div style="position: absolute; top: -20px; right: -20px; opacity: 0.05;">
+                        <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#8f7a62" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                    </div>
+
+                    <div style="width: 60px; height: 60px; background: #e5dacb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(143, 122, 98, 0.15);">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5e4b38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    
+                    <h2 style="font-size: 22px; color: #3b2f23; font-weight: 700; margin-bottom: 15px; line-height: 1.4;">Есть идеи или пожелания по улучшению сайта?</h2>
+                    <p style="color: #5e4b38; font-size: 16px; line-height: 1.7; margin-bottom: 20px;">
+                        Мы всегда рады сделать наш школьный уголок ещё лучше! Если у вас есть предложения, замечания или вы нашли ошибку — напишите нам. Ваше мнение очень важно для нас.
+                    </p>
+                    <p style="color: #8f7a62; font-size: 14px; font-weight: 600; margin: 0;">
+                        С уважением, 10 "А" класс!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        © 2026 Наш дружный класс 10 А. Создано с душой.
+    </footer>
+
+    <button class="scroll-top" onclick="scrollToTop()" aria-label="Наверх">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <script>
+        // Данные учеников
+        const students = [
+            "Ахметзянов Амир", "Бердников Степан", "Варлаков Максим", "Вахитова Ильнара", 
+            "Гаврина Мария", "Горст Кирилл", "Дегтеренко Иван", "Дергачев Иван", 
+            "Дьячкова Анна", "Жилин Ярослав", "Кокшаров Михаил", "Лозицкий Максим", 
+            "Марацевич Илья", "Махмутов Даниэль", "Митишов Илья", "Мурзина Анита", 
+            "Нестеренко Максим", "Новиков Алексей", "Новоселова Марина", "Нохрин Всеволод", 
+            "Нуруллина Милена", "Проскуряков Слава", "Репилов Иван", "Рогов Дмитрий", 
+            "Рыбин Богдан", "Сидоров Никита", "Соколов Иван", "Солобоев Максим", 
+            "Сусолин Владимир", "Тимченко Алевтина", "Тонюк Павел", "Чапаров Тимур", 
+            "Чурин Дмитрий", "Шляпина Валерия"
+        ];
+
+        // Генерация карточек учеников
+        const studentGrid = document.getElementById('studentGrid');
+        students.forEach((name, index) => {
+            const card = document.createElement('div');
+            card.className = 'student-card reveal';
+            
+            card.style.transitionDelay = `${index * 0.03}s`;
+            
+            card.addEventListener('transitionend', function() {
+                if (this.classList.contains('active')) {
+                    this.style.transitionDelay = '0s'; 
+                }
+            }, { once: true });
+
+            const avatar = document.createElement('div');
+            avatar.className = 'student-avatar';
+            avatar.textContent = name.charAt(0);
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'student-name';
+            nameDiv.textContent = name;
+            
+            card.appendChild(avatar);
+            card.appendChild(nameDiv);
+            studentGrid.appendChild(card);
+        });
+
+        // Плавные переходы между страницами
+        function showPage(pageId) {
+            const currentPage = document.querySelector('.page.active');
+            const newPage = document.getElementById('page-' + pageId);
+
+            if (currentPage === newPage) return;
+
+            if (currentPage) {
+                currentPage.classList.add('fade-out');
+                setTimeout(() => {
+                    currentPage.classList.remove('active', 'fade-out');
+                }, 300); 
+            }
+
+            setTimeout(() => {
+                newPage.classList.add('active');
+                
+                document.querySelectorAll('nav.desktop-nav a, .mobile-menu a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                const desktopLink = document.getElementById('nav-' + pageId);
+                if (desktopLink) desktopLink.classList.add('active');
+                
+                const mobileLink = document.getElementById('m-nav-' + pageId);
+                if (mobileLink) mobileLink.classList.add('active');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                document.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
+                setTimeout(checkReveal, 100);
+            }, 300); 
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const burger = document.querySelector('.burger');
+            menu.classList.toggle('open');
+            burger.classList.toggle('active');
+        }
+
+        function closeMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const burger = document.querySelector('.burger');
+            menu.classList.remove('open');
+            burger.classList.remove('active');
+        }
+
+        function scrollToTop() {
+            const startPosition = window.scrollY;
+            const duration = 1000;
+            const startTime = performance.now();
+
+            function scrollStep(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                const easeInOut = progress < 0.5
+                    ? 4 * progress * progress * progress
+                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+                window.scrollTo(0, startPosition * (1 - easeInOut));
+
+                if (progress < 1) {
+                    requestAnimationFrame(scrollStep);
+                }
+            }
+
+            requestAnimationFrame(scrollStep);
+        }
+
+        window.addEventListener('scroll', function() {
+            const btn = document.querySelector('.scroll-top');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        function checkReveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('load', checkReveal);
+    </script>
+</body>
+</html>
