@@ -694,8 +694,11 @@
         </div>
     </main>
 
-    <footer>
-        © 2026 Наш дружный класс 10 А. Создано с душой.
+    <footer style="display: flex; flex-direction: column; gap: 10px;">
+        <div>© 2026 Наш дружный класс 10 А. Создано с душой.</div>
+        <div>
+            <a href="#" onclick="openPrivacy(event)" style="color: #6b5b47; font-size: 13px; text-decoration: underline; opacity: 0.8;">Политика конфиденциальности</a>
+        </div>
     </footer>
 
     <button class="scroll-top" onclick="scrollToTop()" aria-label="Наверх">
@@ -704,18 +707,31 @@
         </svg>
     </button>
 
+    <!-- МОДАЛЬНОЕ ОКНО ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ -->
+    <div id="privacyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: #fdfbf7; padding: 40px; border-radius: 20px; max-width: 600px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 2px solid #e5dacb; position: relative; max-height: 80vh; overflow-y: auto;">
+            <button onclick="closePrivacy()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; color: #8f7a62; cursor: pointer; font-weight: bold;">&times;</button>
+            <h2 style="color: #3b2f23; margin-bottom: 20px; font-size: 24px;">Политика конфиденциальности</h2>
+            <p style="font-size: 15px; margin-bottom: 15px; color: #4a4a4a;">Данный сайт создан в образовательных и информационных целях для школьного сообщества 10 «А» класса.</p>
+            <p style="font-size: 15px; margin-bottom: 15px; color: #4a4a4a;">Сайт не собирает и не передаёт третьим лицам персональные данные пользователей (IP-адреса, файлы cookie, данные геолокации).</p>
+            <p style="font-size: 15px; margin-bottom: 15px; color: #4a4a4a;">Для защиты личных данных учащихся в открытом доступе фамилии в списке учеников сокращены до первой буквы.</p>
+            <p style="font-size: 15px; margin-bottom: 15px; color: #4a4a4a;">Если вы являетесь учеником или родителем и хотите удалить какую-либо информацию (имя или фотографию) с сайта, пожалуйста, свяжитесь с нами через раздел «Обратная связь».</p>
+            <button onclick="closePrivacy()" class="btn" style="margin-top: 20px;">Понятно</button>
+        </div>
+    </div>
+
     <script>
-        // Данные учеников
+        // Данные учеников (фамилии сокращены до первой буквы)
         const students = [
-            "Ахметзянов Амир", "Бердников Степан", "Варлаков Максим", "Вахитова Ильнара", 
-            "Гаврина Мария", "Горст Кирилл", "Дегтеренко Иван", "Дергачев Иван", 
-            "Дьячкова Анна", "Жилин Ярослав", "Кокшаров Михаил", "Лозицкий Максим", 
-            "Марацевич Илья", "Махмутов Даниэль", "Митишов Илья", "Мурзина Анита", 
-            "Нестеренко Максим", "Новиков Алексей", "Новоселова Марина", "Нохрин Всеволод", 
-            "Нуруллина Милена", "Проскуряков Слава", "Репилов Иван", "Рогов Дмитрий", 
-            "Рыбин Богдан", "Сидоров Никита", "Соколов Иван", "Солобоев Максим", 
-            "Сусолин Владимир", "Тимченко Алевтина", "Тонюк Павел", "Чапаров Тимур", 
-            "Чурин Дмитрий", "Шляпина Валерия"
+            "А. Амир", "Б. Степан", "В. Максим", "В. Ильнара", 
+            "Г. Мария", "Г. Кирилл", "Д. Иван", "Д. Иван", 
+            "Д. Анна", "Ж. Ярослав", "К. Михаил", "Л. Максим", 
+            "М. Илья", "М. Даниэль", "М. Илья", "М. Анита", 
+            "Н. Максим", "Н. Алексей", "Н. Марина", "Н. Всеволод", 
+            "Н. Милена", "П. Слава", "Р. Иван", "Р. Дмитрий", 
+            "Р. Богдан", "С. Никита", "С. Иван", "С. Максим", 
+            "С. Владимир", "Т. Алевтина", "Т. Павел", "Ч. Тимур", 
+            "Ч. Дмитрий", "Ш. Валерия"
         ];
 
         // Генерация карточек учеников
@@ -841,6 +857,15 @@
                     el.classList.add('active');
                 }
             });
+        }
+
+        function openPrivacy(e) {
+            if(e) e.preventDefault();
+            document.getElementById('privacyModal').style.display = 'flex';
+        }
+
+        function closePrivacy() {
+            document.getElementById('privacyModal').style.display = 'none';
         }
 
         window.addEventListener('load', checkReveal);
