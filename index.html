@@ -366,6 +366,28 @@
         .scroll-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
         .scroll-top:hover { background: #6b5b47; transform: translateY(-4px) scale(1.05); box-shadow: 0 6px 20px rgba(143, 122, 98, 0.4); }
 
+        /* ===== АНИМАЦИЯ ДЛЯ ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ ===== */
+        #privacyModal {
+            display: flex !important;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        
+        #privacyModal .modal-content {
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #privacyModal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #privacyModal.show .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
         /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
             header { padding: 15px 20px; }
@@ -652,19 +674,20 @@
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: start; margin-top: 30px;">
                 
+                <!-- РАБОЧАЯ ФОРМА (Formspree) -->
                 <div class="form-box reveal" style="max-width: 100%; margin: 0;">
-                    <form onsubmit="event.preventDefault(); alert('Сообщение отправлено!');">
+                    <form action="https://formspree.io/f/moeevore" method="POST">
                         <div class="form-group">
                             <label>Ваше имя</label>
-                            <input type="text" placeholder="Введите имя" required>
+                            <input type="text" name="name" placeholder="Введите имя" required>
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" placeholder="example@mail.com" required>
+                            <input type="email" name="email" placeholder="example@mail.com" required>
                         </div>
                         <div class="form-group">
                             <label>Сообщение</label>
-                            <textarea placeholder="Ваше сообщение..." required></textarea>
+                            <textarea name="message" placeholder="Ваше сообщение..." required></textarea>
                         </div>
                         <button type="submit" class="btn">Отправить сообщение</button>
                     </form>
@@ -708,8 +731,8 @@
     </button>
 
     <!-- МОДАЛЬНОЕ ОКНО ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ -->
-    <div id="privacyModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
-        <div style="background: #fdfbf7; padding: 40px; border-radius: 20px; max-width: 600px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 2px solid #e5dacb; position: relative; max-height: 80vh; overflow-y: auto;">
+    <div id="privacyModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+        <div class="modal-content" style="background: #fdfbf7; padding: 40px; border-radius: 20px; max-width: 600px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 2px solid #e5dacb; position: relative; max-height: 80vh; overflow-y: auto;">
             <button onclick="closePrivacy()" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; color: #8f7a62; cursor: pointer; font-weight: bold;">&times;</button>
             <h2 style="color: #3b2f23; margin-bottom: 20px; font-size: 24px;">Политика конфиденциальности</h2>
             <p style="font-size: 15px; margin-bottom: 15px; color: #4a4a4a;">Данный сайт создан в образовательных и информационных целях для школьного сообщества 10 «А» класса.</p>
@@ -861,11 +884,19 @@
 
         function openPrivacy(e) {
             if(e) e.preventDefault();
-            document.getElementById('privacyModal').style.display = 'flex';
+            const modal = document.getElementById('privacyModal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         }
 
         function closePrivacy() {
-            document.getElementById('privacyModal').style.display = 'none';
+            const modal = document.getElementById('privacyModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 400);
         }
 
         window.addEventListener('load', checkReveal);
